@@ -1,4 +1,13 @@
 *.mov
+*.avi
+*.mpg
+*.BUP
+*.IFO
+*.VOB
+*.VOB.part
+
+a_box_darkly.pdf
+gestural-programming-language/
 
 # Some general ignore patterns
 build/
