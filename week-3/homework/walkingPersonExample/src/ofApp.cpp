@@ -3,10 +3,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-
-
-    
-    //----------------------------------------------------------------
     // the data is stored in a big flat array, let's copy it into something more managable
     for (int i = 0; i < 30; i++){
         for (int j = 0; j < 24; j++){
@@ -25,8 +21,7 @@ void ofApp::setup(){
         }
     }
     
-    //----------------------------------------------------------------
-
+    timef = 0;
 }
 
 //--------------------------------------------------------------
@@ -50,28 +45,27 @@ void ofApp::draw(){
         data2d[i] = frames2d[ (int)(ofGetFrameNum()*0.5) % 30][i];
     }
     
-    //----------------------------- 3d
-//    cam.begin();
     ofSetColor(255);
     
     
-    
     for (int i = 0; i < 24; i++){
+        ofPoint pos = cam.worldToScreen(data3d[i]);
+        ofPolyline squiggle = squiggles[i];
+        squiggle.clear();
+        squiggle.addVertex(pos);
         
-        
-        //ofDrawLine(data3d[i], data3d[0]);
-        ofDrawCircle(cam.worldToScreen(data3d[i]), 5.0);
-        //ofDrawBitmapString(ofToString(i), data3d[i]);
+        for (int j = 0; j < 1000; j++){
+            float radius = ofMap(sin(timef * 0.2), -1,1, 25,75);
+            float radiusY = ofMap(sin(timef * 0.3), -1,1, 25,75);
+            
+            pos.set(pos.x + radius * ofSignedNoise(timef, 0) , pos.y + radiusY * ofSignedNoise(timef, 10000));
+            
+            timef += 0.03;
+            
+            squiggle.addVertex(pos);
+        }
+        squiggle.draw();
     }
-    
-    //ofCircle(data3d[18], 10);
-    
-    
-//    cam.end();
-//
-//    for (int i = 0; i < 24; i++){
-//       // ofCircle(data2d[i], 4);
-//    }
 }
 
 //--------------------------------------------------------------

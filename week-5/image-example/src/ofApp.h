@@ -2,8 +2,6 @@
 
 #include "ofMain.h"
 
-
-
 class ofApp : public ofBaseApp{
 
 	public:
@@ -23,12 +21,5 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-    
-        ofEasyCam cam;
-    
-        ofPoint frames[30][24];         // 30 frames, 24 points per frame
-        ofPoint frames2d[30][24];         // 30 frames, 24 points per frame
-    
-        float timef;
-        ofPolyline squiggles[24];
+        ofImage img;
 };
