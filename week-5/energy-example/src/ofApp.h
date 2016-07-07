@@ -2,10 +2,8 @@
 
 #include "ofMain.h"
 
-#define VIDEO_WIDTH 640
-#define VIDEO_HEIGHT 480
-
 class ofApp : public ofBaseApp{
+
 	public:
 		void setup();
 		void update();
@@ -23,8 +21,5 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-        ofVideoGrabber grabber;
-        ofColor pixelColors[VIDEO_WIDTH][VIDEO_HEIGHT];
-        float energy[VIDEO_WIDTH][VIDEO_HEIGHT];
-        int drawMode;
+        vector < float > energy;
 };
