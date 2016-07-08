@@ -19,14 +19,24 @@ void ofApp::setup(){
 void ofApp::update(){
     grabber.update();
     
+    ofPixels pixels = grabber.getPixels();
+    pixels.mirror(false, true);
+    
     for (int i = 0; i < grabber.getWidth(); i+=10) {
         for (int j = 0; j < grabber.getHeight(); j+=10) {
             for (int k = 0; k < 10; k++) {
                 for (int l = 0; l < 10; l++) {
                     energy[i+k][j+l] *= 0.99;
                     
-                    int brightness = grabber.getPixels().getColor(i, j).getBrightness();
-                    if (ofInRange(brightness, 0, 75)){
+                    // modifying this value will affect how long the afterimages last
+                    // a higher value means a shorter afterimage
+                    if (energy[i+k][j+l] < 0.5) {
+                        energy[i+k][j+l] = 0;
+                    }
+                    
+                    // modifying the brightness range will affect which pixels trigger afterimages
+                    int brightness = pixels.getColor(i, j).getBrightness();
+                    if (ofInRange(brightness, 0, 150)){
                         energy[i+k][j+l] = 1;
                     }
                 }
@@ -39,19 +49,23 @@ void ofApp::update(){
 void ofApp::draw(){
     ofBackground(0);
     
-    float timef = ofGetElapsedTimef();
-    
+    ofPixels pixels = grabber.getPixels();
+    pixels.mirror(false, true);
+
     // proper way to mosaic is to average the image, but we're just gonna step by 10
     for (int i = 0; i < grabber.getWidth(); i+=10) {
         for (int j = 0; j < grabber.getHeight(); j+=10) {
-            int brightness = grabber.getPixels().getColor(i, j).getBrightness();
+            int brightness = pixels.getColor(i, j).getBrightness();
             
+            // modifying pct will affect the frequency and duration of the afterimages
             float pct = sin(energy[i][j] * TWO_PI * 5) + cos(energy[i][j] * TWO_PI * 5);
-            brightness = (int)(brightness + (brightness / 2) * pct);
-            
+//            brightness = (int)(brightness + (brightness / 2) * pct);
+
             ofColor pixelColor = pixelColors[i][j];
             pixelColor.setBrightness(brightness);
             ofSetColor(pixelColor);
+            
+            brightness = (int)(brightness + (brightness) * pct);
             
             brightness = ofClamp(brightness, 0, 255);
             
@@ -134,10 +148,10 @@ void ofApp::keyPressed(int key){
     } else if (key == '9') {
         for (int i = 0; i < grabber.getWidth(); i++) {
             for (int j = 0; j < grabber.getHeight(); j++) {
-                if (i % 2 == 0 || j % 2 == 0) {
-                    pixelColors[i][j] = ofColor::fromHsb((ofRandom(360) / 360.0) * 255, 255, (ofRandom(100) / 100.0) * 255);
+                if (floor(ofRandom(2)) == 0) {
+                    pixelColors[i][j] = ofColor::fromHsb((ofRandom(270, 360) / 360.0) * 255, (ofRandom(80, 100) / 100.0) * 255, 255);
                 } else {
-                    pixelColors[i][j] = ofColor::fromHsb((195 / 360.0) * 255, (ofRandom(100) / 100.0) * 255, 255);
+                     pixelColors[i][j] = ofColor::fromHsb((ofRandom(0, 50) / 360.0) * 255, (ofRandom(80, 100) / 100.0) * 255, 255);
                 }
             }
         }
