@@ -11,9 +11,9 @@ void ofApp::setup(){
         p.pos.set(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight()));
         p.vel.set(0, 0);
         particles.push_back(p);
-        ofPolyline line;
-        lines.push_back(line);
+        lines.push_back(ofPolyline());
     }
+    ofSetFrameRate(15);
 }
 
 //--------------------------------------------------------------
@@ -25,14 +25,14 @@ void ofApp::update(){
         
         for (int i = 0; i < particles.size(); i++) {
             particles[i].resetForce();
-            particles[i].addForce(0.0, 0.28);
-            ofPoint flowVelocity = flowSolver.getVelAtPixel(particles[i].pos.x, particles[i].pos.y);
+            particles[i].addForce(0.0, 0.1);
+            ofPoint flowVelocity = flowSolver.getVelAtPixel(particles[i].pos.x, particles[i].pos.y) * 0.5;
             particles[i].addForce(flowVelocity.x, flowVelocity.y);
             particles[i].addDampingForce();
             particles[i].update();
             particles[i].wrapAroundWalls();
             lines[i].addVertex(particles[i].pos);
-            
+
             if (lines[i].size() > 2) {
                 lines[i].getVertices().erase(lines[i].getVertices().begin());
             }
@@ -43,7 +43,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPixels pixels = grabber.getPixels();
-    pixels.mirror(false, true);
     ofRectangle viewport = ofGetCurrentViewport();
     for (int i = 0; i < particles.size(); i++) {
         if (viewport.inside(particles[i].pos)) {
