@@ -22,10 +22,10 @@ void ofApp::update(){
     ofPixels pixels = grabber.getPixels();
     pixels.mirror(false, true);
     
-    for (int i = 0; i < grabber.getWidth(); i+=10) {
-        for (int j = 0; j < grabber.getHeight(); j+=10) {
-            for (int k = 0; k < 10; k++) {
-                for (int l = 0; l < 10; l++) {
+    for (int i = 0; i < grabber.getWidth(); i+=PIXEL_STEP) {
+        for (int j = 0; j < grabber.getHeight(); j+=PIXEL_STEP) {
+            for (int k = 0; k < PIXEL_STEP; k++) {
+                for (int l = 0; l < PIXEL_STEP; l++) {
                     energy[i+k][j+l] *= 0.99;
                     
                     // modifying this value will affect how long the afterimages last
@@ -53,8 +53,8 @@ void ofApp::draw(){
     pixels.mirror(false, true);
 
     // proper way to mosaic is to average the image, but we're just gonna step by 10
-    for (int i = 0; i < grabber.getWidth(); i+=10) {
-        for (int j = 0; j < grabber.getHeight(); j+=10) {
+    for (int i = 0; i < grabber.getWidth(); i+=PIXEL_STEP) {
+        for (int j = 0; j < grabber.getHeight(); j+=PIXEL_STEP) {
             int brightness = pixels.getColor(i, j).getBrightness();
             
             // modifying pct will affect the frequency and duration of the afterimages
@@ -76,7 +76,7 @@ void ofApp::draw(){
                 ofPushMatrix();
                 ofTranslate(i, j);
                 ofRotateZ(ofMap(brightness, 0, 255, 0, 180));
-                ofDrawRectangle(0, 0, 8, 3);
+                ofDrawRectangle(0, 0, ofMap(brightness, 0, 255, 0, 7), 3);
                 ofPopMatrix();
             } else if (drawMode == 3) {
                 ofPushMatrix();

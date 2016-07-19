@@ -4,6 +4,7 @@
 
 #define VIDEO_WIDTH 640
 #define VIDEO_HEIGHT 480
+#define PIXEL_STEP 10
 
 class ofApp : public ofBaseApp{
 	public:

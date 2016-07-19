@@ -1,0 +1,3 @@
+ofxDelaunay
+ofxOpenCv
+ofxOpticalFlowFarneback
