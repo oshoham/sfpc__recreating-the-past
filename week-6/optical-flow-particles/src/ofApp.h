@@ -23,8 +23,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        void drawLineAsRect(ofPoint startVec, ofPoint endVec, float thickness);
+    
         ofVideoGrabber grabber;
         ofxOpticalFlowFarneback flowSolver;
         vector<particle> particles;
         vector<ofPolyline> lines;
+        vector<int> lineWidths;
 };
