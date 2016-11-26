@@ -30,4 +30,6 @@ class ofApp : public ofBaseApp{
         vector<particle> particles;
         vector<ofPolyline> lines;
         vector<int> lineWidths;
+        vector<int> lineLengths;
+        ofImage frame;
 };

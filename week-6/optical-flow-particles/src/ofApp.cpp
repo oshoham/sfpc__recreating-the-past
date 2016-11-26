@@ -12,7 +12,8 @@ void ofApp::setup(){
         p.vel.set(0, 0);
         particles.push_back(p);
         lines.push_back(ofPolyline());
-        lineWidths.push_back(ofRandom(1, 10));
+        lineWidths.push_back(ofRandom(1, 8));
+        lineLengths.push_back(ofRandom(2, 4));
     }
     ofSetFrameRate(15);
 }
@@ -20,9 +21,11 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     grabber.update();
-    grabber.getPixels().mirror(false, true);
     if (grabber.isFrameNew()) {
-        flowSolver.update(grabber);
+        ofPixels pixels = grabber.getPixels();
+        pixels.mirror(false, true);
+        frame.setFromPixels(pixels);
+        flowSolver.update(frame);
         
         for (int i = 0; i < particles.size(); i++) {
             particles[i].resetForce();
@@ -31,10 +34,15 @@ void ofApp::update(){
             particles[i].addForce(flowVelocity.x, flowVelocity.y);
             particles[i].addDampingForce();
             particles[i].update();
-            particles[i].wrapAroundWalls();
+            
+            if (particles[i].isOutsideWalls()) {
+                lines[i].clear();
+                particles[i].wrapAroundWalls();
+            }
+            
             lines[i].addVertex(particles[i].pos);
 
-            if (lines[i].size() > 2) {
+            if (lines[i].size() > lineLengths[i]) {
                 lines[i].getVertices().erase(lines[i].getVertices().begin());
             }
         }
@@ -44,16 +52,12 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofPixels pixels = grabber.getPixels();
+    pixels.mirror(false, true);
     ofRectangle viewport = ofGetCurrentViewport();
     for (int i = 0; i < particles.size(); i++) {
-        if (viewport.inside(particles[i].pos)) {
-            ofSetColor(pixels.getColor(particles[i].pos.x, particles[i].pos.y));
-//            particles[i].draw();
-//            ofSetLineWidth(lineWidths[i]);
-//            lines[i].draw();
-            if (lines[i].getVertices().size() > 0) {
-                drawLineAsRect(lines[i].getVertices().front(), lines[i].getVertices().back(), lineWidths[i]);
-            }
+        ofSetColor(pixels.getColor(particles[i].pos.x, particles[i].pos.y));
+        if (lines[i].getVertices().size() > 0) {
+            drawLineAsRect(lines[i].getVertices().front(), lines[i].getVertices().back(), lineWidths[i]);
         }
     }
 }

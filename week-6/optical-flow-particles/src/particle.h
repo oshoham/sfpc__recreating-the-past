@@ -32,6 +32,7 @@ public:
     
     void bounceOffWalls();
     void wrapAroundWalls();
+    bool isOutsideWalls();
     
     float damping;
     

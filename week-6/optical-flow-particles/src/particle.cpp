@@ -240,3 +240,12 @@ void particle::wrapAroundWalls(){
         pos.y = maxy;
     }
 }
+
+bool particle::isOutsideWalls() {
+    float minx = 0;
+    float miny = 0;
+    float maxx = ofGetWidth();
+    float maxy = ofGetHeight();
+    
+    return pos.x > maxx || pos.x < minx || pos.y > maxy || pos.y < miny;
+}

@@ -22,6 +22,7 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
         ofPoint poissonDiscSample();
         bool far(int x, int y);
         ofPoint sample(int x, int y);
